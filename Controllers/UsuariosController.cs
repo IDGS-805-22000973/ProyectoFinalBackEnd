@@ -1,26 +1,29 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ProyectoFinal.Data;
 using ProyectoFinal.Dtos;
 using ProyectoFinal.Models;
+using ProyectoFinal.Services;
 
 namespace ProyectoFinal.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "Admin")]
     public class UsuariosController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        // 2. DECLARA LA VARIABLE PARA EL SERVICIO DE CORREO
+        private readonly IEmailService _emailService;
 
-        public UsuariosController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
+        // 3. INYECTA EL SERVICIO EN EL CONSTRUCTOR
+        public UsuariosController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IEmailService emailService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _emailService = emailService; // Asigna el servicio
         }
 
-        // 1. Crear usuario con rol
         [HttpPost]
         public async Task<IActionResult> CrearUsuario([FromBody] CrearUsuarioDto dto)
         {
@@ -34,6 +37,7 @@ namespace ProyectoFinal.Controllers
                 Nombre = dto.Nombre
             };
 
+            // La contraseña en texto plano solo existe aquí (en dto.Password)
             var result = await _userManager.CreateAsync(user, dto.Password);
             if (!result.Succeeded)
                 return BadRequest(new { mensaje = "Error al crear usuario", errores = result.Errors });
@@ -43,7 +47,11 @@ namespace ProyectoFinal.Controllers
 
             await _userManager.AddToRoleAsync(user, dto.Rol);
 
-            return Ok(new { mensaje = "Usuario creado correctamente", email = user.Email });
+            // 4. LLAMA AL SERVICIO DE CORREO DESPUÉS DE CREAR EL USUARIO
+            // Enviamos el dto.Password porque es la única vez que lo tenemos en texto plano
+            await _emailService.EnviarCredencialesUsuarioAsync(user.Nombre, user.Email, dto.Password);
+
+            return Ok(new { mensaje = "Usuario creado y notificado por correo correctamente", email = user.Email });
         }
 
         // 2. Obtener todos los usuarios
@@ -136,5 +144,20 @@ namespace ProyectoFinal.Controllers
             await _userManager.DeleteAsync(user);
             return Ok(new { mensaje = "Usuario eliminado correctamente" });
         }
+
+        [HttpGet("clientes")]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ObtenerClientes()
+        {
+            var clientes = await _userManager.GetUsersInRoleAsync("Cliente");
+            return Ok(clientes.Select(c => new UsuarioDto
+            {
+                Id = c.Id,
+                Nombre = c.Nombre,
+                Email = c.Email
+            }));
+        }
+
+       
     }
 }

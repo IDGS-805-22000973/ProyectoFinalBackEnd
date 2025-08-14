@@ -8,7 +8,7 @@ namespace ProyectoFinal.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "Admin")]
+    //
     public class MateriaPrimaController : ControllerBase
     {
         private readonly AppDbContext _context;

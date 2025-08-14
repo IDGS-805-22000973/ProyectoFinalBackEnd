@@ -8,5 +8,6 @@
         public decimal PrecioVenta { get; set; }
 
         public List<ComponenteProducto> Componentes { get; set; } = new();
+
     }
 }

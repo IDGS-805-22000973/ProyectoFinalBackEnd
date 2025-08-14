@@ -6,6 +6,8 @@ using Microsoft.OpenApi.Models;
 using ProyectoFinal.Data;
 using ProyectoFinal.Models;
 using System.Text;
+using ProyectoFinal.Services;
+using ProyectoFinal.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +46,11 @@ builder.Services.AddAuthentication(opt =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWTSettings["securityKey"]!))
     };
 });
+
+
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+builder.Services.AddTransient<IEmailService, EmailService>();
+
 
 // Configuración de CORS para permitir acceso desde Angular
 builder.Services.AddCors(options =>
@@ -93,24 +100,7 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build(); 
 
-// Crea usuario de prueba
-using (var scope = app.Services.CreateScope())
-{
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
 
-    var user = await userManager.FindByEmailAsync("admin@eco.com");
-    if (user == null)
-    {
-        var newUser = new AppUser
-        {
-            UserName = "admin",
-            Email = "admin@eco.com",
-            Nombre = "Administrador"
-        };
-
-        await userManager.CreateAsync(newUser, "Admin123!");
-    }
-}
 
 // Middleware
 if (app.Environment.IsDevelopment())

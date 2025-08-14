@@ -173,3 +173,7 @@ C:\Users\cerve\source\repos\ProyectoFinal\ProyectoFinal\obj\Debug\net9.0\refint\
 C:\Users\cerve\source\repos\ProyectoFinal\ProyectoFinal\obj\Debug\net9.0\ProyectoFinal.pdb
 C:\Users\cerve\source\repos\ProyectoFinal\ProyectoFinal\obj\Debug\net9.0\ProyectoFinal.genruntimeconfig.cache
 C:\Users\cerve\source\repos\ProyectoFinal\ProyectoFinal\obj\Debug\net9.0\ref\ProyectoFinal.dll
+C:\Users\cerve\source\repos\ProyectoFinal\ProyectoFinal\obj\Debug\net9.0\ProyectoFinal.sourcelink.json
+C:\Users\cerve\source\repos\ProyectoFinal\ProyectoFinal\bin\Debug\net9.0\BouncyCastle.Cryptography.dll
+C:\Users\cerve\source\repos\ProyectoFinal\ProyectoFinal\bin\Debug\net9.0\MailKit.dll
+C:\Users\cerve\source\repos\ProyectoFinal\ProyectoFinal\bin\Debug\net9.0\MimeKit.dll

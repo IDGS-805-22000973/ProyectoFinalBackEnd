@@ -17,6 +17,10 @@ namespace ProyectoFinal.Data
         public DbSet<MateriaPrima> MateriaPrima { get; set; }
         public DbSet<Producto> Productos { get; set; }
         public DbSet<ComponenteProducto> ComponentesProducto { get; set; }
+        public DbSet<Venta> Ventas { get; set; }
+        public DbSet<Comentario> Comentarios { get; set; }
+        public DbSet<Cotizacion> Cotizaciones { get; set; }
+
 
 
 
